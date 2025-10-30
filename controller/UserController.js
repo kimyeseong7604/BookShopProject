@@ -6,14 +6,14 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const join = (req, res) => {
-    const { email, password } = req.body;
+    const { email, name, password, contact } = req.body;
 
-    let sql = 'INSERT INTO users (email, password, salt) VALUES (?, ?, ?)';
+    let sql = 'INSERT INTO users (email, name, password, salt, contact) VALUES (?, ?, ?, ?, ?)';
 
     const salt = crypto.randomBytes(10).toString('base64');
     const hashPassword = crypto.pbkdf2Sync(password, salt, 10000, 10, 'sha512').toString('base64');
 
-    let values = [email, hashPassword, salt];
+    let values = [email, name, hashPassword, salt, contact];
 
     conn.query(sql, values,
         (err, result) => {
@@ -43,6 +43,7 @@ const login = (req, res) => {
 
             if (loginUser && loginUser.password == hasPassword) {
                 const token = jwt.sign({
+                    id: loginUser.id,
                     email: loginUser.email
                 }, process.env.PRIVATE_KEY, {
                     expiresIn: '5m',
