@@ -9,7 +9,8 @@ const allBooks = (req, res) => {
 
     let offset = limit * (currentPage - 1);
 
-    let sql = 'SELECT SQL_CALC_FOUND_ROWS *, (SELECT count(*) FROM likes WHERE books.id = liked_book_id) AS likes FROM books';
+    let sql = `SELECT SQL_CALC_FOUND_ROWS *, (SELECT count(*) FROM likes 
+                WHERE books.id = liked_book_id) AS likes FROM books`;
     let values = [];
 
     if (category_id && news) {
